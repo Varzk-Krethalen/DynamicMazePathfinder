@@ -424,12 +424,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 463937854}
   distance: 100
-  xSpeed: 20
-  ySpeed: 20
+  xSpeed: 5
+  ySpeed: 5
   yMinLimit: -90
   yMaxLimit: 90
   distanceMin: 10
-  distanceMax: 10
+  distanceMax: 1000
   smoothTime: 2
 --- !u!1 &970490522
 GameObject:
