@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29920.165
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicPathfinder", "DynamicPathfinder.csproj", "{C3B5A201-9F88-464A-B18E-4FA44995D542}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicPathfinder", "DynamicPathfinder\DynamicPathfinder.csproj", "{C3B5A201-9F88-464A-B18E-4FA44995D542}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTestingApp", "..\ConsoleTestingApp\ConsoleTestingApp.csproj", "{EACEE1C8-B4FE-4CED-B43D-3EA933E6DD7C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTestingApp", "ConsoleTestingApp\ConsoleTestingApp.csproj", "{EACEE1C8-B4FE-4CED-B43D-3EA933E6DD7C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
