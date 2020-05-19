@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using DynamicPathfinder;
 
-[InitializeOnLoad]
+//[InitializeOnLoad]
 public class PathfinderDisplayScript : MonoBehaviour
 {
     private static GeneticAlgorithm PathFinder { get; set; }

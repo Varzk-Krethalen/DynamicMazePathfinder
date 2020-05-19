@@ -1,11 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30002.166
-MinimumVisualStudioVersion = 10.0.40219.1
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{F72498E6-7A31-8536-7CF5-495E0D491076}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicPathfinder", "..\DynamicPathfinder\DynamicPathfinder.csproj", "{C3B5A201-9F88-464A-B18E-4FA44995D542}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,15 +13,8 @@ Global
 		{F72498E6-7A31-8536-7CF5-495E0D491076}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F72498E6-7A31-8536-7CF5-495E0D491076}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F72498E6-7A31-8536-7CF5-495E0D491076}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C3B5A201-9F88-464A-B18E-4FA44995D542}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C3B5A201-9F88-464A-B18E-4FA44995D542}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C3B5A201-9F88-464A-B18E-4FA44995D542}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C3B5A201-9F88-464A-B18E-4FA44995D542}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {F0364FF4-7470-42F2-98AA-8F662BD095C1}
 	EndGlobalSection
 EndGlobal

@@ -8,7 +8,7 @@ namespace DynamicPathfinder
         public List<PathSegment> Path { get; set; } = new List<PathSegment>();
         public Gene[] Genes { get; set; }
         private Coordinate CurrentPosition { get; set; }
-        private static Array values = Enum.GetValues(typeof(Gene));
+        private static Array values = Enum.GetValues(typeof(Direction));
         private static Random random = new Random();
 
         public Genome(Coordinate initialPosition)
