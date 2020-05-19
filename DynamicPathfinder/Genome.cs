@@ -8,7 +8,7 @@ namespace DynamicPathfinder
         public List<PathSegment> Path { get; set; } = new List<PathSegment>();
         public Gene[] Genes { get; set; }
         private Coordinate CurrentPosition { get; set; }
-        private static Array values = Enum.GetValues(typeof(Direction));
+        private static Array values = Enum.GetValues(typeof(Gene));
         private static Random random = new Random();
 
         public Genome(Coordinate initialPosition)
@@ -33,21 +33,21 @@ namespace DynamicPathfinder
             //update path with direction from genes
             Gene gene = Genes[12]; //should be random
             Coordinate newPosition = CurrentPosition;
-            switch(gene.Direction)
+            switch(gene)
             {
-                case Direction.UP:
+                case Gene.UP:
                     newPosition.Y++;
                     break;
-                case Direction.DOWN:
+                case Gene.DOWN:
                     newPosition.Y--;
                     break;
-                case Direction.NORTH:
+                case Gene.NORTH:
                     newPosition.Z++;
                     break;
-                case Direction.SOUTH:
+                case Gene.SOUTH:
                     newPosition.Z--;
                     break;
-                case Direction.EAST:
+                case Gene.EAST:
                     newPosition.X++;
                     break;
                 default:

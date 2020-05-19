@@ -24,7 +24,7 @@ namespace DynamicPathfinder
             DestinationPosition = destinationPosition;
             IterationsPerGeneration = iterationsPerGeneration;
             BeginNewPopulation(); //remove and assume the function will be called?
-            CrossOver = CrossOver.GetCrossOver(CrossOver.CrossOverType.SINGLE);
+            //CrossOver = CrossOver.GetCrossOver(CrossOver.CrossOverType.SINGLE);
             //add mutation strength
         }
 
