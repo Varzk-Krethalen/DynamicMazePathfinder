@@ -1,14 +1,25 @@
-﻿namespace DynamicPathfinder
+﻿using static DynamicPathfinder.GeneDirection;
+
+namespace DynamicPathfinder
 {
-    //either each gene is a direction with probability, or
-    //we have say 100 genes, which are each a direction, and we take a random one - mutate on distribution of genes!
-    public enum Gene
+    public class Gene
     {
-        UP,
-        DOWN,
-        NORTH,
-        SOUTH,
-        EAST,
-        WEST
+        public Direction Direction { get; set; }
+
+        /// <summary>
+        /// Create a new gene with a random direction
+        /// </summary>
+        public Gene()
+        {
+            RandomiseDirection();
+        }
+
+        /// <summary>
+        /// Set the gene's direction to a random direction
+        /// </summary>
+        public void RandomiseDirection()
+        {
+            Direction = GetRandomDirection();
+        }
     }
 }

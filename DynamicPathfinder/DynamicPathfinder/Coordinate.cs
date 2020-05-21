@@ -1,4 +1,5 @@
 ﻿using System;
+using static DynamicPathfinder.GeneDirection;
 
 namespace DynamicPathfinder
 {
@@ -15,9 +16,38 @@ namespace DynamicPathfinder
         public int Y { get; set; }
         public int Z { get; set; }
 
+        public void MoveDirection(Direction direction)
+        {
+            switch (direction)
+            {
+                case Direction.UP:
+                    Y++;
+                    break;
+                case Direction.DOWN:
+                    Y--;
+                    break;
+                case Direction.NORTH:
+                    Z++;
+                    break;
+                case Direction.SOUTH:
+                    Z--;
+                    break;
+                case Direction.EAST:
+                    X++;
+                    break;
+                default:
+                    X--;
+                    break;
+            }
+        }
+
         public float GetDistance(Coordinate secondPoint)
         {
-            throw new NotImplementedException();
+            float deltaX = X - secondPoint.X;
+            float deltaY = Y - secondPoint.Y;
+            float deltaZ = Z - secondPoint.Z;
+
+            return (float)Math.Sqrt((deltaX * deltaX) + (deltaY * deltaY) + (deltaZ * deltaZ));
         }
     }
 }

@@ -1,60 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
+using static DynamicPathfinder.GeneDirection;
 
 namespace DynamicPathfinder
 {
-    public class Genome //chromosome? what names!?
+    public class Genome //chromosome? naming.
     {
-        public List<PathSegment> Path { get; set; } = new List<PathSegment>();
-        public Gene[] Genes { get; set; }
-        private Coordinate CurrentPosition { get; set; }
-        private static Array values = Enum.GetValues(typeof(Gene));
-        private static Random random = new Random();
+        public List<Coordinate> Path { get; set; } = new List<Coordinate>();
+        private Gene[] Genes { get; set; }
+        public Coordinate CurrentPosition { get; private set; }
 
-        public Genome(Coordinate initialPosition)
+        /// <summary>
+        /// Create genome starting at a given coordinate, possibly with specified genes
+        /// </summary>
+        /// <param name="initialPosition"></param>
+        public Genome(Coordinate initialPosition, Gene[] genes = null)
         {
-            //create new random genome - mutate in new constructor?
             CurrentPosition = initialPosition;
-            Genes = new Gene[100];
-
-            for (int i = 0; i < Genes.Length; i++)
+            if (genes == null)
             {
-                Genes[i] = GetRandomGene();
+                Genes = new Gene[100]; //need to somewhere define genome length
+
+                for (int i = 0; i < Genes.Length; i++)
+                {
+                    Genes[i] = new Gene();
+                }
+            }
+            else
+            {
+                Genes = genes;
             }
         }
 
-        private static Gene GetRandomGene()
-        {
-            return (Gene)values.GetValue(random.Next(values.Length));
-        }
-
+        /// <summary>
+        /// Move in a gene's direction, and reflect that in the path
+        /// </summary>
         public void Move()
         {
-            //update path with direction from genes
-            Gene gene = Genes[12]; //should be random
+            Direction direction = Genes[StaticUtils.Random.Next(0,99)].Direction;
             Coordinate newPosition = CurrentPosition;
-            switch(gene)
-            {
-                case Gene.UP:
-                    newPosition.Y++;
-                    break;
-                case Gene.DOWN:
-                    newPosition.Y--;
-                    break;
-                case Gene.NORTH:
-                    newPosition.Z++;
-                    break;
-                case Gene.SOUTH:
-                    newPosition.Z--;
-                    break;
-                case Gene.EAST:
-                    newPosition.X++;
-                    break;
-                default:
-                    newPosition.X--;
-                    break;
-            }
-            //UpdatePath()
+
+            newPosition.MoveDirection(direction);
+            Path.Add(newPosition);
+            CurrentPosition = newPosition;
         }
 
         /// <summary>
@@ -65,8 +53,8 @@ namespace DynamicPathfinder
         {
             for (int i = 0; i < genesToMutate; i++)
             {
-                int index = random.Next(Genes.Length);
-                Genes[index] = GetRandomGene();
+                int index = StaticUtils.Random.Next(Genes.Length);
+                Genes[index] = new Gene();
             }
         }
     }

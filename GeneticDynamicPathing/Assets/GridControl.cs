@@ -7,11 +7,15 @@ using UnityEngine.UI;
 public class GridControl : MonoBehaviour
 {
     public Button gridButton;
+    private Text inputText;
+    private Material pointMaterial;
     private List<GameObject> GridPoints { get; set; }
 
     // Start is called before the first frame update
     void Start()
     {
+        inputText = GameObject.FindWithTag("GridSize").GetComponent<InputField>().textComponent;
+        //pointMaterial = Material.("PointMaterial");
         gridButton.onClick.AddListener(() => CreateGrid(2));
     }
 
@@ -23,7 +27,7 @@ public class GridControl : MonoBehaviour
 
     void CreateGrid(int scale)
     {
-        string sizeText = GameObject.FindWithTag("GridSize").GetComponent<InputField>().textComponent.text; //TODO: Add size limit
+        string sizeText = inputText.text; //TODO: Add size limit
         int gridSize = int.Parse(sizeText);
 
         Debug.Log(GridPoints?.Count);
@@ -65,6 +69,7 @@ public class GridControl : MonoBehaviour
         Vector3 position = new Vector3(x * scale, y * scale, z * scale);
         gridPoint.transform.position = position;
         gridPoint.transform.localScale = new Vector3((float)0.25, (float)0.25, (float)0.25);
+        gridPoint.GetComponent<Renderer>().material = pointMaterial;
         GridPoints.Add(gridPoint);
     }
 }
