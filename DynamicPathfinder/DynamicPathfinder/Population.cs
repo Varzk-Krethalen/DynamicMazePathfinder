@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace DynamicPathfinder
@@ -50,7 +49,7 @@ namespace DynamicPathfinder
         /// </summary>
         /// <param name="genome"></param>
         /// <returns></returns>
-        private float GetFitness(Genome genome)
+        public float GetFitness(Genome genome)
         {
             return OriginPosition.GetDistance(genome.CurrentPosition);
         }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DynamicPathfinder
+﻿namespace DynamicPathfinder
 {
     internal class OnePointCrossover : CrossOver
     {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using static DynamicPathfinder.GeneDirection;
 
 namespace DynamicPathfinder
@@ -17,6 +16,7 @@ namespace DynamicPathfinder
         public Genome(Coordinate initialPosition, Gene[] genes = null)
         {
             CurrentPosition = initialPosition;
+            Path.Add(CurrentPosition);
             if (genes == null)
             {
                 Genes = new Gene[100]; //need to somewhere define genome length
@@ -38,7 +38,7 @@ namespace DynamicPathfinder
         public void Move()
         {
             Direction direction = Genes[StaticUtils.Random.Next(0,99)].Direction;
-            Coordinate newPosition = CurrentPosition;
+            Coordinate newPosition = new Coordinate(CurrentPosition);
 
             newPosition.MoveDirection(direction);
             Path.Add(newPosition);

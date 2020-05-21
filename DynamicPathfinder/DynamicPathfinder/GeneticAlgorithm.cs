@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 
 namespace DynamicPathfinder
 {
@@ -12,10 +8,10 @@ namespace DynamicPathfinder
         public Coordinate DestinationPosition { get; set; }
         public int NumberOfGenomes { get; set; }
         public int IterationsPerGeneration { get; set; }
-        public int Generation { get; private set; }
         private Population Population { get; set; }
         private CrossOver CrossOver { get; set; }
-        private int Iteration { get; set; }
+        public int Iteration { get; private set; } = 0;
+        public int Generation { get; private set; } = 0;
 
         /// <summary>
         /// Create new algorithm instance and initial population
@@ -51,11 +47,14 @@ namespace DynamicPathfinder
             if (Iteration > IterationsPerGeneration)
             {
                 Population.CreateNewGeneration();
+                Generation++;
+                Iteration = 0;
             }
             else
             {
                 Population.RunIteration();
                 UpdateDestinationPosition();
+                Iteration++;
             }
         }
 
@@ -74,9 +73,14 @@ namespace DynamicPathfinder
         /// Gets a copy of the path coordinates for the first genome of the current generation
         /// </summary>
         /// <returns></returns>
-        public List<Coordinate> GetFirstGenomePath()
+        public Genome GetFirstGenome()
         {
-            return new List<Coordinate>(Population.Genomes.FirstOrDefault().Path);
+            return Population.Genomes.FirstOrDefault();
+        }
+
+        public float GetFitness(Genome genome)
+        {
+            return Population.GetFitness(genome);
         }
     }
 }

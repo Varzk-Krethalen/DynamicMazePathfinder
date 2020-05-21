@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DynamicPathfinder
+﻿namespace DynamicPathfinder
 {
     public abstract class CrossOver
     {

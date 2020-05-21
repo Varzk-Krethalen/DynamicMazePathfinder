@@ -12,6 +12,14 @@ namespace DynamicPathfinder
             Z = z;
         }
 
+        public Coordinate(Coordinate coordToCopy)
+        {
+
+            X = coordToCopy.X;
+            Y = coordToCopy.Y;
+            Z = coordToCopy.Z;
+        }
+
         public int X { get; set; }
         public int Y { get; set; }
         public int Z { get; set; }
