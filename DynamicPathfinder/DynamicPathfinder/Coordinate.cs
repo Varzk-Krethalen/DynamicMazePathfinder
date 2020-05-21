@@ -5,6 +5,12 @@ namespace DynamicPathfinder
 {
     public class Coordinate
     {
+        /// <summary>
+        /// Create a 3D coordinate
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
         public Coordinate(int x, int y, int z)
         {
             X = x;
@@ -12,6 +18,10 @@ namespace DynamicPathfinder
             Z = z;
         }
 
+        /// <summary>
+        /// Create a copy of a coordinate
+        /// </summary>
+        /// <param name="coordToCopy"></param>
         public Coordinate(Coordinate coordToCopy)
         {
 
@@ -24,6 +34,10 @@ namespace DynamicPathfinder
         public int Y { get; set; }
         public int Z { get; set; }
 
+        /// <summary>
+        /// Move the coordinate in the specificed direction
+        /// </summary>
+        /// <param name="direction"></param>
         public void MoveDirection(Direction direction)
         {
             switch (direction)
@@ -49,6 +63,11 @@ namespace DynamicPathfinder
             }
         }
 
+        /// <summary>
+        /// Get euclidean distance between two coordinates
+        /// </summary>
+        /// <param name="secondPoint"></param>
+        /// <returns></returns>
         public float GetDistance(Coordinate secondPoint)
         {
             float deltaX = X - secondPoint.X;

@@ -6,7 +6,7 @@ namespace DynamicPathfinder
     public class Genome //chromosome? naming.
     {
         public List<Coordinate> Path { get; set; } = new List<Coordinate>();
-        private Gene[] Genes { get; set; }
+        public Gene[] Genes { get; private set; }
         public Coordinate CurrentPosition { get; private set; }
 
         /// <summary>
@@ -19,7 +19,7 @@ namespace DynamicPathfinder
             Path.Add(CurrentPosition);
             if (genes == null)
             {
-                Genes = new Gene[100]; //need to somewhere define genome length
+                Genes = new Gene[StaticUtils.GenomeLength]; //need to somewhere define genome length
 
                 for (int i = 0; i < Genes.Length; i++)
                 {
@@ -37,7 +37,7 @@ namespace DynamicPathfinder
         /// </summary>
         public void Move()
         {
-            Direction direction = Genes[StaticUtils.Random.Next(0,99)].Direction;
+            Direction direction = Genes[StaticUtils.RandomGeneIndex()].Direction;
             Coordinate newPosition = new Coordinate(CurrentPosition);
 
             newPosition.MoveDirection(direction);
@@ -53,8 +53,7 @@ namespace DynamicPathfinder
         {
             for (int i = 0; i < genesToMutate; i++)
             {
-                int index = StaticUtils.Random.Next(Genes.Length);
-                Genes[index] = new Gene();
+                Genes[StaticUtils.RandomGeneIndex()] = new Gene();
             }
         }
     }

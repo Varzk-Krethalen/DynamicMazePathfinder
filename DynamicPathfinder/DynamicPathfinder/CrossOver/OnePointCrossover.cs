@@ -11,7 +11,7 @@
 
         private Gene[] CrossGenes(Gene[] parentGenes1, Gene[] parentGenes2, int crossPoint)
         {
-            Gene[] newGenes = new Gene[100];
+            Gene[] newGenes = new Gene[StaticUtils.GenomeLength];
             for (int i = 0; i < crossPoint; i++)
             {
                 newGenes[i] = parentGenes1[i];

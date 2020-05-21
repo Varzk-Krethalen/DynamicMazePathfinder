@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DynamicPathfinder
@@ -9,39 +10,81 @@ namespace DynamicPathfinder
         private int NumberOfGenomes { get; }
         public CrossOver CrossOver { get; }
         public Coordinate OriginPosition { get; }
+        public Coordinate DestinationPosition { get; }
+
         private int mutationStrength = 1;
 
-        public Population(int numberOfGenomes, CrossOver crossOver, Coordinate originPosition)
+        /// <summary>
+        /// Create a population of a set number of genes, with a crossover type, and the ideal path ends
+        /// </summary>
+        /// <param name="numberOfGenomes"></param>
+        /// <param name="crossOver"></param>
+        /// <param name="originPosition"></param>
+        /// <param name="destinationPosition"></param>
+        public Population(int numberOfGenomes, CrossOver crossOver, Coordinate originPosition, Coordinate destinationPosition)
         {
             NumberOfGenomes = numberOfGenomes;
             CrossOver = crossOver;
             OriginPosition = originPosition;
-            AddNewGenomes(NumberOfGenomes);
-        }
-
-        public void CreateNewGeneration() //when mutate? before, after, new percentage set?
-        {
-            int topTenPercent = (int)(((double)NumberOfGenomes / 100) * 25);
-            List<Genome> newGenomes = Genomes.OrderBy(g => GetFitness(g))
-                .Take(topTenPercent)
-                .ToList();
-
-            Genomes = new List<Genome>(newGenomes);
-
-            int remainingGenes = NumberOfGenomes - topTenPercent;
-            AddNewGenomes(remainingGenes);
-        }
-
-        /// <summary>
-        /// Add a number of new genome instances to the population
-        /// </summary>
-        /// <param name="noOfGenomes"></param>
-        private void AddNewGenomes(int noOfGenomes)
-        {
-            for (int i = 0; i < noOfGenomes && Genomes.Count < NumberOfGenomes; i++)
+            DestinationPosition = destinationPosition;
+            for (int i = 0; i < NumberOfGenomes; i++)
             {
                 Genomes.Add(new Genome(OriginPosition));
             }
+        }
+
+        /// <summary>
+        /// Create a new generation of genomes based on the previous
+        /// </summary>
+        public void CreateNewGeneration() //when mutate? before, after, new percentage set?
+        {
+            int topTenPercent = (int)(((double)NumberOfGenomes / 100) * 25);
+            IOrderedEnumerable<Genome> genomesByFitness = Genomes.OrderBy(g => GetFitness(g));
+
+            Genomes = new List<Genome>(genomesByFitness
+                .Take(topTenPercent)
+                .ToList());
+            Genomes.AddRange(GetCrossOverGenomes(genomesByFitness.Skip(topTenPercent).ToList()));
+        }//Should crossovers be from the fittest?
+        
+
+        /// <summary>
+        /// Crossover all pairs of genomes
+        /// </summary>
+        /// <param name="parentGenomes"></param>
+        /// <returns></returns>
+        private List<Genome> GetCrossOverGenomes(List<Genome> parentGenomes)
+        {
+            //select randomly from top ten for parents?
+            List<(Genome, Genome)> parentPairs = PairGenomes(parentGenomes, out Genome oddGenome);
+            List<Genome> offspring = new List<Genome>();
+            parentPairs.ForEach(p =>
+            {
+                CrossOver.CrossOverGenomes(p.Item1.Genes, p.Item2.Genes, out Genome offspring1, out Genome offspring2, OriginPosition);
+                offspring.Add(offspring1);
+                offspring.Add(offspring2);
+            });
+            offspring.Add(oddGenome);
+            return offspring;
+        }
+
+        /// <summary>
+        /// Pair genomes
+        /// </summary>
+        /// <param name="genomes"></param>
+        /// <returns></returns>
+        private List<(Genome, Genome)> PairGenomes(List<Genome> genomes, out Genome oddGenome)
+        {
+            List<(Genome, Genome)> pairs = new List<(Genome, Genome)>();
+            while (genomes.Count > 1)
+            {
+                (Genome, Genome) pair = (genomes.First(), genomes.Skip(1).First());
+                genomes.Remove(pair.Item1);
+                genomes.Remove(pair.Item2);
+                pairs.Add(pair);
+            }
+            oddGenome = genomes.FirstOrDefault();
+            return pairs;
         }
 
         /// <summary>
@@ -51,7 +94,7 @@ namespace DynamicPathfinder
         /// <returns></returns>
         public float GetFitness(Genome genome)
         {
-            return OriginPosition.GetDistance(genome.CurrentPosition);
+            return DestinationPosition.GetDistance(genome.CurrentPosition);
         }
 
         /// <summary>

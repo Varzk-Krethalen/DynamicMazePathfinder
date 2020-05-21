@@ -12,7 +12,10 @@ namespace ConsoleTestingApp
 
         static void Main(string[] args)
         {
-            geneticAlgorithm = new GeneticAlgorithm(20, 20, new Coordinate(0, 0, 0), new Coordinate(5, 5, 5));
+            Coordinate dest = new Coordinate(15, 15, 15);
+            int iterations = dest.X + dest.Y + dest.Z;
+            iterations += iterations / 3;
+            geneticAlgorithm = new GeneticAlgorithm(20, iterations, new Coordinate(0, 0, 0), dest);
             Timer timer = new Timer(50) { AutoReset = true, Enabled = true };
             timer.Elapsed += TimerCallback;
             timer.Start();

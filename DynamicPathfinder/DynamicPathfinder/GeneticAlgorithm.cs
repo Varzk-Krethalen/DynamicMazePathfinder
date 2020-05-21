@@ -35,8 +35,8 @@ namespace DynamicPathfinder
         /// Create a new population set
         /// </summary>
         public void BeginNewPopulation()
-        {
-            Population = new Population(NumberOfGenomes, CrossOver, OriginPosition);
+        {//shouldn't have to pass the destination position
+            Population = new Population(NumberOfGenomes, CrossOver, OriginPosition, DestinationPosition);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace DynamicPathfinder
             else
             {
                 Population.RunIteration();
-                UpdateDestinationPosition();
+                //UpdateDestinationPosition();
                 Iteration++;
             }
         }
@@ -75,7 +75,8 @@ namespace DynamicPathfinder
         /// <returns></returns>
         public Genome GetFirstGenome()
         {
-            return Population.Genomes.FirstOrDefault();
+            //return Population.Genomes.FirstOrDefault();
+            return Population.Genomes.OrderBy(g => Population.GetFitness(g)).FirstOrDefault();
         }
 
         public float GetFitness(Genome genome)
