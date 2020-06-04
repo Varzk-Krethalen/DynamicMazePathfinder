@@ -16,6 +16,7 @@ TagManager:
   - Genomes
   - Scale
   - Mutation
+  - IterationLength
   layers:
   - Default
   - TransparentFX
