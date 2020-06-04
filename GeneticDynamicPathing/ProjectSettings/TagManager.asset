@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - GridSize
+  - TemplatePoint
   layers:
   - Default
   - TransparentFX

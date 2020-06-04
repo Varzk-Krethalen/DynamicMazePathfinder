@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,41 +7,41 @@ public class GridControl : MonoBehaviour
 {
     public Button gridButton;
     private Text inputText;
-    private Material pointMaterial;
     private List<GameObject> GridPoints { get; set; }
+    private GameObject TemplatePoint { get; set; }
 
     // Start is called before the first frame update
     void Start()
     {
         inputText = GameObject.FindWithTag("GridSize").GetComponent<InputField>().textComponent;
-        //pointMaterial = Material.("PointMaterial");
         gridButton.onClick.AddListener(() => CreateGrid(2));
+        GetTemplatePoint();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void GetTemplatePoint()
     {
-        
+        TemplatePoint = GameObject.FindGameObjectWithTag("TemplatePoint");
     }
 
+    //event listener for when the button is clicked
     void CreateGrid(int scale)
     {
         string sizeText = inputText.text; //TODO: Add size limit
-        int gridSize = int.Parse(sizeText);
-
-        Debug.Log(GridPoints?.Count);
+        int gridRadius = int.Parse(sizeText);
 
         DestroyGrid();
         GridPoints = new List<GameObject>();
-        int gridRadius = gridSize / 2;
-        int gridAntiPadding = gridSize % 2 == 0 ? 1 : 0;
-        for (int x = -gridRadius + gridAntiPadding; x <= gridRadius; x++) //Creates a grid around origin
+
+        for (int x = -gridRadius; x <= gridRadius; x++) //Creates a grid around origin
         {
-            for (int y = -gridRadius + gridAntiPadding; y <= gridRadius; y++)
+            for (int y = -gridRadius; y <= gridRadius; y++)
             {
-                for (int z = -gridRadius + gridAntiPadding; z <= gridRadius; z++)
+                for (int z = -gridRadius; z <= gridRadius; z++)
                 {
-                    CreateGridPoint(x, y, z, scale);
+                    if (!(x == 0 && y == 0 && z == 0))
+                    {
+                        CreateGridPoint(x, y, z, scale);
+                    }
                 }
             }
         }
@@ -65,11 +64,10 @@ public class GridControl : MonoBehaviour
 
     private void CreateGridPoint(int x, int y, int z, int scale)
     {
-        GameObject gridPoint = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        GameObject gridPoint = Instantiate(TemplatePoint);
         Vector3 position = new Vector3(x * scale, y * scale, z * scale);
         gridPoint.transform.position = position;
         gridPoint.transform.localScale = new Vector3((float)0.25, (float)0.25, (float)0.25);
-        gridPoint.GetComponent<Renderer>().material = pointMaterial;
         GridPoints.Add(gridPoint);
     }
 }
