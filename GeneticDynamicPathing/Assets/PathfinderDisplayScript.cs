@@ -3,67 +3,117 @@ using UnityEngine;
 using UnityEngine.UI;
 using DynamicPathfinder;
 using System;
+using System.Linq;
 
 //[InitializeOnLoad]
 public class PathfinderDisplayScript : MonoBehaviour
 {
-    public Button runButton;
     private GeneticAlgorithm PathFinder { get; set; }
     private GridControl GridController { get; set; }
-    public int NumberOfGenomes { get; set; } = 20;
-    public int IterationsPerGeneration { get; set; } = 20;
-    public int DestinationX { get; set; } = 5;
-    public int DestinationY { get; set; } = 5;
-    public int DestinationZ { get; set; } = 5;
+    private int NumberOfGenomes { get; set; }
+    private int IterationsPerGeneration { get; set; }
+    private float IterationPeriod { get; set; } = 0.1f;
+    private Coordinate LastLinePoint { get; set; }
+    private Coordinate OriginPoint { get; set; }
+    private Coordinate DestinationPoint { get; set; }
+    private bool running = false;
+    private int lastGeneration;
 
-    private float iterationPeriod;
-    //private static DynamicPathfinder.get last path?
-    private bool running;
-
-    PathfinderDisplayScript()
+    public void RunPathfinder()
     {
-        runButton.onClick.AddListener(() => RunPathfinder());
-    }
+        UpdateGridController();
 
-    private void RunPathfinder()
-    {
-        if (!running)
+        if (!running && UpdateSettings())
         {
-            if (GridController == null)
-            {
-                GetGridController();
-            }
-            UpdateSettings();
-            PathFinder = new GeneticAlgorithm(NumberOfGenomes, IterationsPerGeneration, new Coordinate(0, 0, 0), new Coordinate(DestinationX, DestinationY, DestinationZ));
-            GridController.CreateDestinationPoint(DestinationX, DestinationY, DestinationZ);
+            lastGeneration = 0;
+            PathFinder = new GeneticAlgorithm(NumberOfGenomes, IterationsPerGeneration, OriginPoint, DestinationPoint);
+            UpdateDestinationOnGrid();
+            LastLinePoint = OriginPoint;
+            SetStatus("Running");
+        }
+        else
+        {
+            SetStatus("Invalid settings");
+            return;
         }
         running = !running;
+        if (!running)
+        {
+            SetStatus("Stopped");
+        }
     }
 
-    private void GetGridController()
+    private static void SetStatus(string statusString)
     {
-        GridController = FindObjectOfType(typeof(GridControl)) as GridControl;
+        GameObject.FindWithTag("Status").GetComponent<Text>().text = statusString;
     }
 
-    private void UpdateSettings()
+    private bool UpdateSettings() //TODO: get from field, TODO: alter mutation rate/crossover percent
     {
-        //get iteration period, genomes, etc
-        NumberOfGenomes = 0;
-        IterationsPerGeneration = 0;
-        DestinationX = 0;
-        DestinationY = 0;
-        DestinationZ = 0;
-        throw new NotImplementedException();
+        OriginPoint = new Coordinate(0, 0, 0);
+        DestinationPoint = new Coordinate(GridController.DimensionMax, GridController.DimensionMax, GridController.DimensionMax); //TODO: make random if not user defined
+        var iterationsText = GameObject.FindWithTag("Iterations").GetComponent<InputField>().textComponent;
+        if (iterationsText != null && !iterationsText.text.Equals(string.Empty))
+        {
+            IterationsPerGeneration = int.Parse(iterationsText.text);
+
+            var genomesText = GameObject.FindWithTag("Genomes").GetComponent<InputField>().textComponent;
+            if (TextObjectIsValid(genomesText))
+            {
+                NumberOfGenomes = int.Parse(genomesText.text);
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+        return PointIsValid(OriginPoint) && PointIsValid(DestinationPoint);
+    }
+
+    private static bool TextObjectIsValid(Text textObject)
+    {
+        return textObject != null && !textObject.text.Equals(string.Empty);
+    }
+
+    private bool PointIsValid(Coordinate point)
+    {
+        int max = GridController.DimensionMax;
+        int min = -max;
+        return point.X <= max
+            && point.X >= min
+            && point.Y <= max
+            && point.Y >= min
+            && point.Z <= max
+            && point.Z >= min;
+    }
+
+    private void UpdateGridController()
+    {
+        if (GridController == null)
+        {
+            GridController = FindObjectOfType(typeof(GridControl)) as GridControl;
+        }
+    }
+
+    private void UpdateDestinationOnGrid()
+    {
+        if (PointIsValid(DestinationPoint))
+        {
+            GridController.CreateDestinationPoint(DestinationPoint.X, DestinationPoint.Y, DestinationPoint.Z);
+        }
     }
 
     private float elapsedTime = 0.0f;
-    public float period = 1.1f;
     void Update()
     {
         if (running)
         {
             elapsedTime += Time.deltaTime;
-            if (elapsedTime > period)
+            if (elapsedTime > IterationPeriod)
             {
                 elapsedTime = 0.0f;
                 RunIteration();
@@ -79,8 +129,22 @@ public class PathfinderDisplayScript : MonoBehaviour
 
     private void DisplayIteration()
     {
-        int startX, startY, startZ, endX, endY, endZ;
-        startX = startY = startZ = endX = endY = endZ = 0;
-        GridController.CreateGridLine(startX, startY, startZ, endX, endY, endZ);
+        if (PathFinder.Generation != lastGeneration)
+        {
+            lastGeneration = PathFinder.Generation;
+            GridController.ResetLines();
+        }
+        else
+        {
+            Coordinate endpoint = PathFinder.GetFirstGenome().Path.Last();
+            if (PointIsValid(endpoint))
+            {
+                GridController.CreateGridLine(LastLinePoint.X, LastLinePoint.Y, LastLinePoint.Z, endpoint.X, endpoint.Y, endpoint.Z);
+                LastLinePoint = endpoint;
+
+                DestinationPoint = PathFinder.DestinationPosition;
+                UpdateDestinationOnGrid();
+            }
+        }
     }
 }

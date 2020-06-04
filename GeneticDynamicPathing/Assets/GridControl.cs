@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class GridControl : MonoBehaviour
 {
+    public Shader lineShader;
     public Button gridButton;
     private Text inputText;
     private List<GameObject> GridPoints { get; set; }
@@ -13,12 +14,14 @@ public class GridControl : MonoBehaviour
     private GameObject TemplateDestination { get; set; }
     private GameObject DestinationPoint { get; set; }
     public int DimensionMax { get; set; }
-    public int Scale { get; set; } = 2;
+    private int Scale { get; set; } = 2; //TODO - add UI option?
+    private Vector3 ObjectScale { get; set; } = new Vector3((float)0.25, (float)0.25, (float)0.25);
 
     // Start is called before the first frame update
     void Start()
     {
         inputText = GameObject.FindWithTag("GridSize").GetComponent<InputField>().textComponent;
+
         gridButton.onClick.AddListener(() => CreateGrid());
         GetTemplates();
     }
@@ -35,8 +38,11 @@ public class GridControl : MonoBehaviour
         string sizeText = inputText.text; //TODO: Add size limit
         int gridRadius = int.Parse(sizeText);
 
-        DestroyGrid();
+        ResetGridPoints();
+        ResetDestinationPoint();
+        ResetLines();
         GridPoints = new List<GameObject>();
+        GridLines = new List<GameObject>();
 
         for (int x = -gridRadius; x <= gridRadius; x++) //Creates a grid around origin
         {
@@ -52,7 +58,6 @@ public class GridControl : MonoBehaviour
             }
         }
         DimensionMax = gridRadius;
-        //if destination blank or invalid, default to random?
     }
 
     internal void CreateDestinationPoint(int x, int y, int z)
@@ -60,10 +65,19 @@ public class GridControl : MonoBehaviour
         DestinationPoint = Instantiate(TemplateDestination);
         Vector3 position = new Vector3(x * Scale, y * Scale, z * Scale);
         DestinationPoint.transform.position = position;
-        DestinationPoint.transform.localScale = new Vector3((float)0.25, (float)0.25, (float)0.25);
+        DestinationPoint.transform.localScale = ObjectScale;
     }
 
-    private void DestroyGrid()
+    internal void ResetDestinationPoint()
+    {
+        if (DestinationPoint != null)
+        {
+            Destroy(DestinationPoint);
+            DestinationPoint = null;
+        }
+    }
+
+    internal void ResetGridPoints()
     {
         if (GridPoints != null && GridPoints.Count > 0)
         {
@@ -73,6 +87,10 @@ public class GridControl : MonoBehaviour
                 Destroy(gridPoint);
             }
         }
+    }
+
+    internal void ResetLines()
+    {
         if (GridLines != null && GridLines.Count > 0)
         {
             for (int i = 0; i < GridLines.Count; i++)
@@ -81,26 +99,39 @@ public class GridControl : MonoBehaviour
                 Destroy(gridLine);
             }
         }
-        if (DestinationPoint != null)
-        {
-            Destroy(DestinationPoint);
-            DestinationPoint = null;
-        }
     }
 
+    //based on http://answers.unity.com/answers/1108340/view.html
     internal void CreateGridLine(int startX, int startY, int startZ, int endX, int endY, int endZ)
     {
-        //GameObject gridPoint = Instantiate(TemplateLine);
+        Color color = new Color(0.505f, 0.145f, 0.552f);
+        Vector3 start = GetGridScaledVector(startX, startY, startZ);
+        Vector3 end = GetGridScaledVector(endX, endY, endZ);
 
-        throw new NotImplementedException();
+        GameObject myLine = new GameObject();
+        myLine.transform.position = start;
+        myLine.AddComponent<LineRenderer>();
+        LineRenderer lr = myLine.GetComponent<LineRenderer>();
+        lr.material = new Material(Shader.Find("Standard"));
+        lr.startColor = lr.endColor = color;
+        lr.startWidth = lr.endWidth = 0.2f;
+        lr.SetPosition(0, start);
+        lr.SetPosition(1, end);
+
+        GridLines.Add(myLine);
     }
 
     private void CreateGridPoint(int x, int y, int z)
     {
         GameObject gridPoint = Instantiate(TemplatePoint);
-        Vector3 position = new Vector3(x * Scale, y * Scale, z * Scale);
+        Vector3 position = GetGridScaledVector(x, y, z);
         gridPoint.transform.position = position;
-        gridPoint.transform.localScale = new Vector3((float)0.25, (float)0.25, (float)0.25);
+        gridPoint.transform.localScale = ObjectScale;
         GridPoints.Add(gridPoint);
+    }
+
+    private Vector3 GetGridScaledVector(int x, int y, int z)
+    {
+        return new Vector3(x * Scale, y * Scale, z* Scale);
     }
 }

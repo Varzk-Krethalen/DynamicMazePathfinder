@@ -6,6 +6,16 @@ TagManager:
   tags:
   - GridSize
   - TemplatePoint
+  - TemplateDestination
+  - Status
+  - Iterations
+  - CurrentMaxFitness
+  - DestX
+  - DestY
+  - DestZ
+  - Genomes
+  - Scale
+  - Mutation
   layers:
   - Default
   - TransparentFX
