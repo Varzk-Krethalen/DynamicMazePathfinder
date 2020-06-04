@@ -17,6 +17,7 @@ TagManager:
   - Scale
   - Mutation
   - IterationLength
+  - Fitness
   layers:
   - Default
   - TransparentFX

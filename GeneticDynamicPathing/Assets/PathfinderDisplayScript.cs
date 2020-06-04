@@ -16,6 +16,8 @@ public class PathfinderDisplayScript : MonoBehaviour
     private Coordinate LastLinePoint { get; set; }
     private Coordinate OriginPoint { get; set; }
     private Coordinate DestinationPoint { get; set; }
+
+    private const string inputStringFindError = "Invalid Settings";
     private bool running = false;
     private int lastGeneration;
 
@@ -23,60 +25,77 @@ public class PathfinderDisplayScript : MonoBehaviour
     {
         UpdateGridController();
 
-        if (!running && UpdateSettings())
+        if (!running)
         {
-            lastGeneration = 0;
-            PathFinder = new GeneticAlgorithm(NumberOfGenomes, IterationsPerGeneration, OriginPoint, DestinationPoint);
-            UpdateDestinationOnGrid();
-            LastLinePoint = OriginPoint;
-            SetStatus("Running");
+            try
+            {
+                UpdateSettings();
+                lastGeneration = 0;
+                PathFinder = new GeneticAlgorithm(NumberOfGenomes, IterationsPerGeneration, OriginPoint, DestinationPoint);
+                UpdateDestinationOnGrid();
+                LastLinePoint = OriginPoint;
+                SetOutput("Status", "Running");
+            }
+            catch (FormatException e)
+            {
+                SetOutput("Status", inputStringFindError);
+            }
+            catch (Exception e)
+            {
+                SetOutput("Status", e.Message);
+            }
         }
         else
         {
-            SetStatus("Invalid settings");
-            return;
+            SetOutput("Status", "Stopped");
         }
         running = !running;
-        if (!running)
-        {
-            SetStatus("Stopped");
-        }
     }
 
-    private static void SetStatus(string statusString)
+    private static void SetOutput(string tag, string statusString)
     {
         GameObject.FindWithTag("Status").GetComponent<Text>().text = statusString;
     }
 
-    private bool UpdateSettings() //TODO: get from field, TODO: alter mutation rate/crossover percent
+    private void UpdateSettings() //TODO: get from field, TODO: alter mutation rate/crossover percent
     {
         OriginPoint = new Coordinate(0, 0, 0);
-        DestinationPoint = new Coordinate(GridController.DimensionMax, GridController.DimensionMax, GridController.DimensionMax); //TODO: make random if not user defined
-        var iterationsText = GameObject.FindWithTag("Iterations").GetComponent<InputField>().textComponent;
-        if (iterationsText != null && !iterationsText.text.Equals(string.Empty))
-        {
-            IterationsPerGeneration = int.Parse(iterationsText.text);
 
-            var genomesText = GameObject.FindWithTag("Genomes").GetComponent<InputField>().textComponent;
-            if (TextObjectIsValid(genomesText))
-            {
-                NumberOfGenomes = int.Parse(genomesText.text);
-            }
-            else
-            {
-                return false;
-            }
+        try
+        {
+            int destX = int.Parse(GetInputStringByTag("DestX"));
+            int destY = int.Parse(GetInputStringByTag("DestY"));
+            int destZ = int.Parse(GetInputStringByTag("DestZ"));
+            DestinationPoint = new Coordinate(destX, destY, destZ);
+        }
+        catch
+        {
+            System.Random rand = new System.Random();
+            DestinationPoint = new Coordinate(rand.Next(1, GridController.DimensionMax), rand.Next(1, GridController.DimensionMax), rand.Next(1, GridController.DimensionMax));
+        }
+
+        IterationsPerGeneration = int.Parse(GetInputStringByTag("Iterations"));
+        NumberOfGenomes = int.Parse(GetInputStringByTag("Genomes"));
+        IterationPeriod = float.Parse(GetInputStringByTag("IterationLength"));
+
+        if (!(PointIsValid(OriginPoint) && PointIsValid(DestinationPoint)))
+        {
+            throw new Exception(inputStringFindError);
+        }
+    }
+
+    private string GetInputStringByTag(string objectTag)
+    {
+        var textObject = GameObject.FindWithTag(objectTag).GetComponent<InputField>().textComponent;
+        if (textObject != null && !textObject.text.Equals(string.Empty))
+        {
+            return textObject.text;
+
         }
         else
         {
-            return false;
+            throw new Exception(inputStringFindError);
         }
-        return PointIsValid(OriginPoint) && PointIsValid(DestinationPoint);
-    }
-
-    private static bool TextObjectIsValid(Text textObject)
-    {
-        return textObject != null && !textObject.text.Equals(string.Empty);
     }
 
     private bool PointIsValid(Coordinate point)
@@ -131,6 +150,8 @@ public class PathfinderDisplayScript : MonoBehaviour
     {
         if (PathFinder.Generation != lastGeneration)
         {
+            SetOutput("Fitness", $"Current Best Fitness: {PathFinder.GetFitness(PathFinder.GetFirstGenome())}");
+            SetOutput("Status", PathFinder.Generation.ToString());
             lastGeneration = PathFinder.Generation;
             GridController.ResetLines();
         }

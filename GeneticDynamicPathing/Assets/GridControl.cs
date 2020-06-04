@@ -63,8 +63,7 @@ public class GridControl : MonoBehaviour
     internal void CreateDestinationPoint(int x, int y, int z)
     {
         DestinationPoint = Instantiate(TemplateDestination);
-        Vector3 position = new Vector3(x * Scale, y * Scale, z * Scale);
-        DestinationPoint.transform.position = position;
+        DestinationPoint.transform.position = GetGridScaledVector(x, y, z);
         DestinationPoint.transform.localScale = ObjectScale;
     }
 
@@ -124,8 +123,7 @@ public class GridControl : MonoBehaviour
     private void CreateGridPoint(int x, int y, int z)
     {
         GameObject gridPoint = Instantiate(TemplatePoint);
-        Vector3 position = GetGridScaledVector(x, y, z);
-        gridPoint.transform.position = position;
+        gridPoint.transform.position = GetGridScaledVector(x, y, z);
         gridPoint.transform.localScale = ObjectScale;
         GridPoints.Add(gridPoint);
     }
