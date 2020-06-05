@@ -18,7 +18,7 @@ namespace ConsoleTestingApp
             float mutationStrength = GetMutationStrengthFromUser();
             lastCoordOnly = GetPathPrefFromUser();
 
-            Console.WriteLine("Running - Press any key to exit");
+            Console.WriteLine("Running - Press any key to end");
 
             int iterations = dest.X + dest.Y + dest.Z;
             iterations += iterations / 3;
@@ -27,6 +27,8 @@ namespace ConsoleTestingApp
             {
                 RunAlgorithm();
             }
+            Console.WriteLine($"Final Generation = {geneticAlgorithm.Generation - 1}");
+            Console.ReadKey();
         }
 
         private static Coordinate GetDestFromUser()

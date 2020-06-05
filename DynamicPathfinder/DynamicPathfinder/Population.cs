@@ -100,7 +100,7 @@ namespace DynamicPathfinder
             {
                 if (StaticUtils.Random.Next(1, 10000) <= MutationStrength) //consider NextDouble
                 {
-                    genome.Mutate(StaticUtils.Random.Next(0, StaticUtils.GenomeLength / 100));
+                    genome.Mutate(StaticUtils.Random.Next(1, StaticUtils.GenomeLength / 100));
                 }
             }
         }
