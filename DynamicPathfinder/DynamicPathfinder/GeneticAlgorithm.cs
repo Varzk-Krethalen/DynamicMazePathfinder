@@ -22,7 +22,7 @@ namespace DynamicPathfinder
         /// <param name="iterationsPerGeneration"></param>
         /// <param name="originPosition"></param>
         /// <param name="destinationPosition"></param>
-        public GeneticAlgorithm(int numberOfGenomes, int iterationsPerGeneration, Coordinate originPosition, Coordinate destinationPosition, float mutationStrength) //fitness threshold? percentage of fit individuals?
+        public GeneticAlgorithm(int numberOfGenomes, int iterationsPerGeneration, Coordinate originPosition, Coordinate destinationPosition, float mutationStrength, CrossOver.CrossOverType crossOverType) //fitness threshold? percentage of fit individuals?
         {
             NumberOfGenomes = numberOfGenomes;
             OriginPosition = originPosition;
@@ -30,7 +30,7 @@ namespace DynamicPathfinder
             DestinationPosition = destinationPosition;
             MutationStrength = mutationStrength;
             IterationsPerGeneration = iterationsPerGeneration;
-            CrossOver = CrossOver.GetCrossOver(CrossOver.CrossOverType.ONE_POINT);
+            CrossOver = CrossOver.GetCrossOver(crossOverType);
             BeginNewPopulation();
             //add mutation strength?
         }

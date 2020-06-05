@@ -22,7 +22,7 @@ namespace ConsoleTestingApp
 
             int iterations = dest.X + dest.Y + dest.Z;
             iterations += iterations / 3;
-            geneticAlgorithm = new GeneticAlgorithm(noOfGenomes, iterations, new Coordinate(0, 0, 0), dest, mutationStrength);
+            geneticAlgorithm = new GeneticAlgorithm(noOfGenomes, iterations, new Coordinate(0, 0, 0), dest, mutationStrength, CrossOver.CrossOverType.ONE_POINT);
             while (!Console.KeyAvailable)
             {
                 RunAlgorithm();
