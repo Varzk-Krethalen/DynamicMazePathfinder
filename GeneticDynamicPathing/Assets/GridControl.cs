@@ -72,8 +72,9 @@ public class GridControl : MonoBehaviour
         DimensionMax = gridRadius;
     }
 
-    internal void CreateDestinationPoint(int x, int y, int z)
+    internal void UpdateDestinationPoint(int x, int y, int z)
     {
+        ResetDestinationPoint();
         DestinationPoint = Instantiate(TemplateDestination);
         DestinationPoint.transform.position = GetGridScaledVector(x, y, z);
         DestinationPoint.transform.localScale = ObjectScale;

@@ -155,7 +155,7 @@ public class PathfinderDisplayScript : MonoBehaviour
     {
         if (PointIsValid(DestinationPoint))
         {
-            GridController.CreateDestinationPoint(DestinationPoint.X, DestinationPoint.Y, DestinationPoint.Z);
+            GridController.UpdateDestinationPoint(DestinationPoint.X, DestinationPoint.Y, DestinationPoint.Z);
         }
     }
 
