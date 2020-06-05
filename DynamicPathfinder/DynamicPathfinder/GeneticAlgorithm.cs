@@ -6,7 +6,7 @@ namespace DynamicPathfinder
     {
         public Coordinate OriginPosition { get; set; }
         public Coordinate DestinationPosition { get; set; }
-        public int MutationStrength { get; }
+        public float MutationStrength { get; }
         public int NumberOfGenomes { get; set; }
         public int IterationsPerGeneration { get; set; }
         private Population Population { get; set; }
@@ -21,7 +21,7 @@ namespace DynamicPathfinder
         /// <param name="iterationsPerGeneration"></param>
         /// <param name="originPosition"></param>
         /// <param name="destinationPosition"></param>
-        public GeneticAlgorithm(int numberOfGenomes, int iterationsPerGeneration, Coordinate originPosition, Coordinate destinationPosition, int mutationStrength) //fitness threshold? percentage of fit individuals?
+        public GeneticAlgorithm(int numberOfGenomes, int iterationsPerGeneration, Coordinate originPosition, Coordinate destinationPosition, float mutationStrength) //fitness threshold? percentage of fit individuals?
         {
             NumberOfGenomes = numberOfGenomes;
             OriginPosition = originPosition;

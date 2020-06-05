@@ -21,13 +21,13 @@ namespace DynamicPathfinder
         /// <param name="crossOver"></param>
         /// <param name="originPosition"></param>
         /// <param name="destinationPosition"></param>
-        public Population(int numberOfGenomes, CrossOver crossOver, Coordinate originPosition, Coordinate destinationPosition, int mutationStrength)
+        public Population(int numberOfGenomes, CrossOver crossOver, Coordinate originPosition, Coordinate destinationPosition, float mutationStrength)
         {
             NumberOfGenomes = numberOfGenomes;
             CrossOver = crossOver;
             OriginPosition = originPosition;
             DestinationPosition = destinationPosition;
-            MutationStrength = mutationStrength;
+            MutationStrength = (int)(mutationStrength * 100);
             for (int i = 0; i < NumberOfGenomes; i++)
             {
                 Genomes.Add(new Genome(OriginPosition));
@@ -42,10 +42,14 @@ namespace DynamicPathfinder
             int topTenPercent = (int)(((double)NumberOfGenomes / 100) * 25);
             IOrderedEnumerable<Genome> genomesByFitness = Genomes.OrderBy(g => GetFitness(g));
             int requiredRemaining = NumberOfGenomes - topTenPercent;
+
             Genomes = new List<Genome>(genomesByFitness
                 .Take(topTenPercent)
                 .ToList());
-            Genomes.AddRange(GetCrossOverGenomes(Genomes, requiredRemaining));
+
+            List<Genome> offspring = GetCrossOverGenomes(Genomes, requiredRemaining);
+            MutateGenomes(offspring);
+            Genomes.AddRange(offspring);
         }
         
 
@@ -90,13 +94,13 @@ namespace DynamicPathfinder
         /// <summary>
         /// Foreach genome, based on mutation percentage chance, mutate up to that percentage of genes
         /// </summary>
-        private void MutateGenomes()
+        private void MutateGenomes(List<Genome> genomesToEvolve)
         {
-            foreach (Genome genome in Genomes)
+            foreach (Genome genome in genomesToEvolve)
             {
-                if (StaticUtils.Random.Next(1, 100) <= MutationStrength) //consider NextDouble
+                if (StaticUtils.Random.Next(1, 10000) <= MutationStrength) //consider NextDouble
                 {
-                    genome.Mutate(StaticUtils.Random.Next(0, MutationStrength));
+                    genome.Mutate(StaticUtils.Random.Next(0, StaticUtils.GenomeLength / 100));
                 }
             }
         }
