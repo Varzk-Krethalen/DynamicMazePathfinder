@@ -12,7 +12,7 @@ public class PathfinderDisplayScript : MonoBehaviour
     private int NumberOfGenomes { get; set; }
     private int IterationsPerGeneration { get; set; }
     private float IterationPeriod { get; set; }
-    private int MutationStrength { get; set; }
+    private float MutationStrength { get; set; }
     private Coordinate LastLinePoint { get; set; }
     private Coordinate OriginPoint { get; set; }
     private Coordinate DestinationPoint { get; set; }
@@ -103,7 +103,7 @@ public class PathfinderDisplayScript : MonoBehaviour
 
         try
         {
-            MutationStrength = int.Parse(GetInputStringByTag("Mutation"));
+            MutationStrength = float.Parse(GetInputStringByTag("Mutation"));
         }
         catch
         {
