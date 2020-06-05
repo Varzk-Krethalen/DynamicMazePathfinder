@@ -6,6 +6,7 @@ namespace DynamicPathfinder
     {
         public Coordinate OriginPosition { get; set; }
         public Coordinate DestinationPosition { get; set; }
+        public int MutationStrength { get; }
         public int NumberOfGenomes { get; set; }
         public int IterationsPerGeneration { get; set; }
         private Population Population { get; set; }
@@ -20,11 +21,12 @@ namespace DynamicPathfinder
         /// <param name="iterationsPerGeneration"></param>
         /// <param name="originPosition"></param>
         /// <param name="destinationPosition"></param>
-        public GeneticAlgorithm(int numberOfGenomes, int iterationsPerGeneration, Coordinate originPosition, Coordinate destinationPosition) //fitness threshold? percentage of fit individuals?
+        public GeneticAlgorithm(int numberOfGenomes, int iterationsPerGeneration, Coordinate originPosition, Coordinate destinationPosition, int mutationStrength) //fitness threshold? percentage of fit individuals?
         {
             NumberOfGenomes = numberOfGenomes;
             OriginPosition = originPosition;
             DestinationPosition = destinationPosition;
+            MutationStrength = mutationStrength;
             IterationsPerGeneration = iterationsPerGeneration;
             CrossOver = CrossOver.GetCrossOver(CrossOver.CrossOverType.ONE_POINT);
             BeginNewPopulation();
@@ -36,7 +38,7 @@ namespace DynamicPathfinder
         /// </summary>
         public void BeginNewPopulation()
         {//shouldn't have to pass the destination position
-            Population = new Population(NumberOfGenomes, CrossOver, OriginPosition, DestinationPosition);
+            Population = new Population(NumberOfGenomes, CrossOver, OriginPosition, DestinationPosition, MutationStrength);
         }
 
         /// <summary>
@@ -53,7 +55,7 @@ namespace DynamicPathfinder
             else
             {
                 Population.RunIteration();
-                //UpdateDestinationPosition();
+                UpdateDestinationPosition();
                 Iteration++;
             }
         }

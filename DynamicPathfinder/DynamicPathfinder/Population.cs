@@ -12,7 +12,7 @@ namespace DynamicPathfinder
         public Coordinate OriginPosition { get; }
         public Coordinate DestinationPosition { get; }
 
-        private int mutationStrength = 1;
+        private int MutationStrength { get; set; }
 
         /// <summary>
         /// Create a population of a set number of genes, with a crossover type, and the ideal path ends
@@ -21,12 +21,13 @@ namespace DynamicPathfinder
         /// <param name="crossOver"></param>
         /// <param name="originPosition"></param>
         /// <param name="destinationPosition"></param>
-        public Population(int numberOfGenomes, CrossOver crossOver, Coordinate originPosition, Coordinate destinationPosition)
+        public Population(int numberOfGenomes, CrossOver crossOver, Coordinate originPosition, Coordinate destinationPosition, int mutationStrength)
         {
             NumberOfGenomes = numberOfGenomes;
             CrossOver = crossOver;
             OriginPosition = originPosition;
             DestinationPosition = destinationPosition;
+            this.MutationStrength = mutationStrength;
             for (int i = 0; i < NumberOfGenomes; i++)
             {
                 Genomes.Add(new Genome(OriginPosition));
@@ -115,9 +116,9 @@ namespace DynamicPathfinder
         {
             foreach (Genome genome in Genomes)
             {
-                if (StaticUtils.Random.Next(1, 100) <= mutationStrength) //consider NextDouble
+                if (StaticUtils.Random.Next(1, 100) <= MutationStrength) //consider NextDouble
                 {
-                    genome.Mutate(StaticUtils.Random.Next(0, mutationStrength));
+                    genome.Mutate(StaticUtils.Random.Next(0, MutationStrength));
                 }
             }
         }

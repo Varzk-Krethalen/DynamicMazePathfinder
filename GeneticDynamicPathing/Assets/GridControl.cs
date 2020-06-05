@@ -8,6 +8,7 @@ public class GridControl : MonoBehaviour
     public Shader lineShader;
     public Button gridButton;
     private Text inputText;
+    private Text inputScale;
     private List<GameObject> GridPoints { get; set; }
     private List<GameObject> GridLines { get; set; }
     private GameObject TemplatePoint { get; set; }
@@ -21,6 +22,7 @@ public class GridControl : MonoBehaviour
     void Start()
     {
         inputText = GameObject.FindWithTag("GridSize").GetComponent<InputField>().textComponent;
+        inputScale = GameObject.FindWithTag("Scale").GetComponent<InputField>().textComponent;
 
         gridButton.onClick.AddListener(() => CreateGrid());
         GetTemplates();
@@ -35,8 +37,18 @@ public class GridControl : MonoBehaviour
     //event listener for when the button is clicked
     void CreateGrid()
     {
-        string sizeText = inputText.text; //TODO: Add size limit
+        string sizeText = inputText.text;
         int gridRadius = int.Parse(sizeText);
+
+        string scaleText = inputScale.text;
+        try
+        {
+            Scale = int.Parse(scaleText);
+        }
+        catch
+        {
+            Scale = 2;
+        }
 
         ResetGridPoints();
         ResetDestinationPoint();

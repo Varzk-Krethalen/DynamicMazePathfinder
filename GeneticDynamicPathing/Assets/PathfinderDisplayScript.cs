@@ -1,5 +1,4 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using DynamicPathfinder;
 using System;
@@ -12,7 +11,8 @@ public class PathfinderDisplayScript : MonoBehaviour
     private GridControl GridController { get; set; }
     private int NumberOfGenomes { get; set; }
     private int IterationsPerGeneration { get; set; }
-    private float IterationPeriod { get; set; } = 0.1f;
+    private float IterationPeriod { get; set; }
+    private int MutationStrength { get; set; }
     private Coordinate LastLinePoint { get; set; }
     private Coordinate OriginPoint { get; set; }
     private Coordinate DestinationPoint { get; set; }
@@ -31,12 +31,12 @@ public class PathfinderDisplayScript : MonoBehaviour
             {
                 UpdateSettings();
                 lastGeneration = 0;
-                PathFinder = new GeneticAlgorithm(NumberOfGenomes, IterationsPerGeneration, OriginPoint, DestinationPoint);
+                PathFinder = new GeneticAlgorithm(NumberOfGenomes, IterationsPerGeneration, OriginPoint, DestinationPoint, MutationStrength);
                 UpdateDestinationOnGrid();
                 LastLinePoint = OriginPoint;
                 SetOutput("Status", "Running");
             }
-            catch (FormatException e)
+            catch (FormatException)
             {
                 SetOutput("Status", inputStringFindError);
             }
@@ -74,9 +74,42 @@ public class PathfinderDisplayScript : MonoBehaviour
             DestinationPoint = new Coordinate(rand.Next(1, GridController.DimensionMax), rand.Next(1, GridController.DimensionMax), rand.Next(1, GridController.DimensionMax));
         }
 
-        IterationsPerGeneration = int.Parse(GetInputStringByTag("Iterations"));
-        NumberOfGenomes = int.Parse(GetInputStringByTag("Genomes"));
-        IterationPeriod = float.Parse(GetInputStringByTag("IterationLength"));
+        try
+        {
+            IterationPeriod = float.Parse(GetInputStringByTag("IterationLength"));
+        }
+        catch
+        {
+            IterationPeriod = 0.5f;
+        }
+
+        try
+        {
+            IterationsPerGeneration = int.Parse(GetInputStringByTag("Iterations"));
+        }
+        catch
+        {
+            IterationsPerGeneration = (int)((Math.Abs(DestinationPoint.X) + Math.Abs(DestinationPoint.Y) + Math.Abs(DestinationPoint.Z)) * 1.2);
+        }
+
+        try
+        {
+            NumberOfGenomes = int.Parse(GetInputStringByTag("Genomes"));
+        }
+        catch
+        {
+            NumberOfGenomes = 20;
+        }
+
+        try
+        {
+            MutationStrength = int.Parse(GetInputStringByTag("Mutation"));
+        }
+        catch
+        {
+            MutationStrength = 1;
+        }
+
 
         if (!(PointIsValid(OriginPoint) && PointIsValid(DestinationPoint)))
         {
@@ -151,8 +184,9 @@ public class PathfinderDisplayScript : MonoBehaviour
         if (PathFinder.Generation != lastGeneration)
         {
             SetOutput("Fitness", $"Current Best Fitness: {PathFinder.GetFitness(PathFinder.GetFirstGenome())}");
-            SetOutput("Status", PathFinder.Generation.ToString());
+            SetOutput("Status", $"Generation: {PathFinder.Generation}");
             lastGeneration = PathFinder.Generation;
+            LastLinePoint = OriginPoint;
             GridController.ResetLines();
         }
         else
