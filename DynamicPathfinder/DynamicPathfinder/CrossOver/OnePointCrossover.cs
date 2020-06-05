@@ -2,10 +2,10 @@
 {
     internal class OnePointCrossover : CrossOver
     {
-        public override Genome CrossOverGenomes(Gene[] parent1, Gene[] parent2, Coordinate initialPosition)
+        public override Genome CrossOverGenomes(Genome parent1, Genome parent2, Coordinate initialPosition)
         {
-            int crossPoint = StaticUtils.Random.Next(0, parent1.Length);
-            return new Genome(initialPosition, CrossGenes(parent1, parent2, crossPoint));
+            int crossPoint = StaticUtils.RandomGeneIndex();
+            return new Genome(initialPosition, CrossGenes(parent1.Genes, parent2.Genes, crossPoint));
         }
 
         private Gene[] CrossGenes(Gene[] parentGenes1, Gene[] parentGenes2, int crossPoint)

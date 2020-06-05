@@ -44,11 +44,6 @@ namespace DynamicPathfinder
             newPosition.MoveDirection(direction);
             Path.Add(newPosition);
 
-            if (CurrentPosition.GetDistance(newPosition) > 1)
-            {
-                Console.WriteLine("dafuq?");
-            }
-
             CurrentPosition = newPosition;
         }
 

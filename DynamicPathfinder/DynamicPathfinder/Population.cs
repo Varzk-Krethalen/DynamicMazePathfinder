@@ -65,7 +65,7 @@ namespace DynamicPathfinder
             {
                 Genome parent1 = parentGenomes[StaticUtils.Random.Next(parentGenomes.Count - 1)];
                 Genome parent2 = parentGenomes[StaticUtils.Random.Next(parentGenomes.Count - 1)];
-                offspring.Add(CrossOver.CrossOverGenomes(parent1.Genes, parent2.Genes, OriginPosition));
+                offspring.Add(CrossOver.CrossOverGenomes(parent1, parent2, OriginPosition));
             }
             return offspring;
         }

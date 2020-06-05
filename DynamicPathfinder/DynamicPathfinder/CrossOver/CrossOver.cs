@@ -5,7 +5,7 @@
         /// <summary>
         /// Available CrossOver implementations
         /// </summary>
-        public enum CrossOverType { UNIFORM, SEGMENT, ONE_POINT }
+        public enum CrossOverType { UNIFORM, TWO_POINT, ONE_POINT }
 
         /// <summary>
         /// Return one of the implemented crossover types
@@ -18,8 +18,8 @@
             {
                 case CrossOverType.UNIFORM:
                     return new UniformCrossover();
-                case CrossOverType.SEGMENT:
-                    return new SegmentCrossover();
+                case CrossOverType.TWO_POINT:
+                    return new TwoPointCrossover();
                 default:
                     return new OnePointCrossover();
             }
@@ -33,6 +33,6 @@
         /// <param name="offspring1"></param>
         /// <param name="offspring2"></param>
         /// <param name="initialPosition"></param>
-        public abstract Genome CrossOverGenomes(Gene[] parent1, Gene[] parent2, Coordinate initialPosition);
+        public abstract Genome CrossOverGenomes(Genome parent1, Genome parent2, Coordinate initialPosition);
     }
 }

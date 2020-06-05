@@ -1,6 +1,6 @@
 ﻿namespace DynamicPathfinder
 {
-    internal class UniformCrossover : CrossOver
+    internal class TwoPointCrossover : CrossOver
     {
         public override Genome CrossOverGenomes(Genome parent1, Genome parent2, Coordinate initialPosition)
         {

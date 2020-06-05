@@ -46,7 +46,7 @@
     <Compile Include="Coordinate.cs" />
     <Compile Include="CrossOver\CrossOver.cs" />
     <Compile Include="CrossOver\OnePointCrossover.cs" />
-    <Compile Include="CrossOver\SegmentCrossover.cs" />
+    <Compile Include="CrossOver\TwoPointCrossover.cs" />
     <Compile Include="CrossOver\UniformCrossover.cs" />
     <Compile Include="Direction.cs" />
     <Compile Include="Gene.cs" />

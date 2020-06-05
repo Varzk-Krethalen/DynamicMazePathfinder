@@ -5,6 +5,7 @@ namespace DynamicPathfinder
     public class GeneticAlgorithm
     {
         public Coordinate OriginPosition { get; set; }
+        public Coordinate InitialDestinationPosition { get; set; }
         public Coordinate DestinationPosition { get; set; }
         public float MutationStrength { get; }
         public int NumberOfGenomes { get; set; }
@@ -25,6 +26,7 @@ namespace DynamicPathfinder
         {
             NumberOfGenomes = numberOfGenomes;
             OriginPosition = originPosition;
+            InitialDestinationPosition = new Coordinate(destinationPosition);
             DestinationPosition = destinationPosition;
             MutationStrength = mutationStrength;
             IterationsPerGeneration = iterationsPerGeneration;
@@ -49,6 +51,7 @@ namespace DynamicPathfinder
             if (Iteration > IterationsPerGeneration)
             {
                 Population.CreateNewGeneration();
+                DestinationPosition = new Coordinate(InitialDestinationPosition);
                 Generation++;
                 Iteration = 0;
             }
