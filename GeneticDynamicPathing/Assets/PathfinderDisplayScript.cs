@@ -31,7 +31,7 @@ public class PathfinderDisplayScript : MonoBehaviour
             {
                 UpdateSettings();
                 lastGeneration = 0;
-                PathFinder = new GeneticAlgorithm(NumberOfGenomes, IterationsPerGeneration, OriginPoint, DestinationPoint, MutationStrength);
+                PathFinder = new GeneticAlgorithm(NumberOfGenomes, IterationsPerGeneration, OriginPoint, DestinationPoint, MutationStrength, CrossOver.CrossOverType.ONE_POINT);
                 UpdateDestinationOnGrid();
                 LastLinePoint = OriginPoint;
                 SetOutput("Status", "Running");
