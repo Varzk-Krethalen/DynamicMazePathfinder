@@ -1,6 +1,7 @@
 ﻿using DynamicPathfinder;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Timers;
 
 namespace ConsoleTestingApp
@@ -22,15 +23,10 @@ namespace ConsoleTestingApp
             int iterations = dest.X + dest.Y + dest.Z;
             iterations += iterations / 3;
             geneticAlgorithm = new GeneticAlgorithm(noOfGenomes, iterations, new Coordinate(0, 0, 0), dest, mutationStrength);
-            Timer timer = new Timer(0.001) { AutoReset = true, Enabled = true };
-            //while(true)
-            //{
-            //    TimerCallback(null, null);
-            //}
-            timer.Elapsed += TimerCallback;
-            timer.Start();
-            Console.ReadKey();
-            timer.Stop();
+            while (!Console.KeyAvailable)
+            {
+                RunAlgorithm();
+            }
         }
 
         private static Coordinate GetDestFromUser()
@@ -60,31 +56,37 @@ namespace ConsoleTestingApp
             return "y".Equals(Console.ReadLine(), StringComparison.OrdinalIgnoreCase);
         }
 
-        private static void TimerCallback(object source, ElapsedEventArgs e)
+        private static void RunAlgorithm()
         {
             geneticAlgorithm.Update();
             if (geneticAlgorithm.Iteration == geneticAlgorithm.IterationsPerGeneration)
             {
-                Genome bestGenome = geneticAlgorithm.GetFittestGenome();
-                Coordinate dest = geneticAlgorithm.DestinationPosition;
-                string pathStr = "";
-                if (lastCoordOnly)
-                {
-                    Coordinate lastCoord = bestGenome.Path.Last();
-                    pathStr += $"Last coordinate = ({lastCoord.X},{lastCoord.Y},{lastCoord.Z})";
-                }
-                else
-                {
-                    pathStr += "Current Path";
-                    foreach (var coord in bestGenome.Path)
-                    {
-                        pathStr += $"({coord.X},{coord.Y},{coord.Z}) ";
-                    }
-                }
-                pathStr += $", fitness = {geneticAlgorithm.GetFitness(bestGenome)}";
-                pathStr += $", destination = ({dest.X},{dest.Y},{dest.Z})";
-                Console.WriteLine(pathStr);
+                PrintLastGeneration();
+                Thread.Sleep(500);
             }
+        }
+
+        private static void PrintLastGeneration()
+        {
+            Genome bestGenome = geneticAlgorithm.GetFittestGenome();
+            Coordinate dest = geneticAlgorithm.DestinationPosition;
+            string pathStr = "";
+            if (lastCoordOnly)
+            {
+                Coordinate lastCoord = bestGenome.Path.Last();
+                pathStr += $"Last coordinate = ({lastCoord.X},{lastCoord.Y},{lastCoord.Z})";
+            }
+            else
+            {
+                pathStr += "Current Path";
+                foreach (var coord in bestGenome.Path)
+                {
+                    pathStr += $"({coord.X},{coord.Y},{coord.Z}) ";
+                }
+            }
+            pathStr += $", fitness = {geneticAlgorithm.GetFitness(bestGenome)}";
+            pathStr += $", destination = ({dest.X},{dest.Y},{dest.Z})";
+            Console.WriteLine(pathStr);
         }
     }
 }
