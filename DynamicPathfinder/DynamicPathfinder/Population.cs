@@ -27,7 +27,7 @@ namespace DynamicPathfinder
             CrossOver = crossOver;
             OriginPosition = originPosition;
             DestinationPosition = destinationPosition;
-            this.MutationStrength = mutationStrength;
+            MutationStrength = mutationStrength;
             for (int i = 0; i < NumberOfGenomes; i++)
             {
                 Genomes.Add(new Genome(OriginPosition));
@@ -41,12 +41,12 @@ namespace DynamicPathfinder
         {
             int topTenPercent = (int)(((double)NumberOfGenomes / 100) * 25);
             IOrderedEnumerable<Genome> genomesByFitness = Genomes.OrderBy(g => GetFitness(g));
-
+            int requiredRemaining = NumberOfGenomes - topTenPercent;
             Genomes = new List<Genome>(genomesByFitness
                 .Take(topTenPercent)
                 .ToList());
-            Genomes.AddRange(GetCrossOverGenomes(genomesByFitness.Skip(topTenPercent).ToList()));
-        }//Should crossovers be from the fittest?
+            Genomes.AddRange(GetCrossOverGenomes(Genomes, requiredRemaining));
+        }
         
 
         /// <summary>
@@ -54,38 +54,16 @@ namespace DynamicPathfinder
         /// </summary>
         /// <param name="parentGenomes"></param>
         /// <returns></returns>
-        private List<Genome> GetCrossOverGenomes(List<Genome> parentGenomes)
+        private List<Genome> GetCrossOverGenomes(List<Genome> parentGenomes, int requiredChildren)
         {
-            //select randomly from top ten for parents?
-            List<(Genome, Genome)> parentPairs = PairGenomes(parentGenomes, out Genome oddGenome);
             List<Genome> offspring = new List<Genome>();
-            parentPairs.ForEach(p =>
+            while (offspring.Count < requiredChildren)
             {
-                CrossOver.CrossOverGenomes(p.Item1.Genes, p.Item2.Genes, out Genome offspring1, out Genome offspring2, OriginPosition);
-                offspring.Add(offspring1);
-                offspring.Add(offspring2);
-            });
-            offspring.Add(oddGenome);
-            return offspring;
-        }
-
-        /// <summary>
-        /// Pair genomes
-        /// </summary>
-        /// <param name="genomes"></param>
-        /// <returns></returns>
-        private List<(Genome, Genome)> PairGenomes(List<Genome> genomes, out Genome oddGenome)
-        {
-            List<(Genome, Genome)> pairs = new List<(Genome, Genome)>();
-            while (genomes.Count > 1)
-            {
-                (Genome, Genome) pair = (genomes.First(), genomes.Skip(1).First());
-                genomes.Remove(pair.Item1);
-                genomes.Remove(pair.Item2);
-                pairs.Add(pair);
+                Genome parent1 = parentGenomes[StaticUtils.Random.Next(parentGenomes.Count - 1)];
+                Genome parent2 = parentGenomes[StaticUtils.Random.Next(parentGenomes.Count - 1)];
+                offspring.Add(CrossOver.CrossOverGenomes(parent1.Genes, parent2.Genes, OriginPosition));
             }
-            oddGenome = genomes.FirstOrDefault();
-            return pairs;
+            return offspring;
         }
 
         /// <summary>

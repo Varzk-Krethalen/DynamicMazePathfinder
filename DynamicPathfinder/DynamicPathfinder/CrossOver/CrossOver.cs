@@ -33,6 +33,6 @@
         /// <param name="offspring1"></param>
         /// <param name="offspring2"></param>
         /// <param name="initialPosition"></param>
-        public abstract void CrossOverGenomes(Gene[] parent1, Gene[] parent2, out Genome offspring1, out Genome offspring2, Coordinate initialPosition);
+        public abstract Genome CrossOverGenomes(Gene[] parent1, Gene[] parent2, Coordinate initialPosition);
     }
 }

@@ -72,12 +72,20 @@ namespace DynamicPathfinder
         }
 
         /// <summary>
-        /// Gets a copy of the path coordinates for the first genome of the current generation
+        /// Gets the first genome of the current generation
         /// </summary>
         /// <returns></returns>
         public Genome GetFirstGenome()
         {
-            //return Population.Genomes.FirstOrDefault();
+            return Population.Genomes.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets the fittest genome of the current generation
+        /// </summary>
+        /// <returns></returns>
+        public Genome GetFittestGenome()
+        {
             return Population.Genomes.OrderBy(g => Population.GetFitness(g)).FirstOrDefault();
         }
 
