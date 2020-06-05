@@ -48,8 +48,8 @@ namespace DynamicPathfinder
                 .ToList());
 
             List<Genome> offspring = GetCrossOverGenomes(Genomes, requiredRemaining);
-            MutateGenomes(offspring);
             Genomes.AddRange(offspring);
+            MutateGenomes(Genomes);
         }
         
 
