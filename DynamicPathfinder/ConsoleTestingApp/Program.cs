@@ -8,14 +8,14 @@ namespace ConsoleTestingApp
     class Program
     {
         static GeneticAlgorithm geneticAlgorithm;
-        static bool lastCoordOnly = true;
+        static bool lastCoordOnly = false;
 
         static void Main(string[] args)
         {
             Coordinate dest = new Coordinate(15, 15, 15);
             int iterations = dest.X + dest.Y + dest.Z;
             iterations += iterations / 3;
-            geneticAlgorithm = new GeneticAlgorithm(20, iterations, new Coordinate(0, 0, 0), dest);
+            geneticAlgorithm = new GeneticAlgorithm(20, iterations, new Coordinate(0, 0, 0), dest, 1);
             Timer timer = new Timer(50) { AutoReset = true, Enabled = true };
             timer.Elapsed += TimerCallback;
             timer.Start();

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using static DynamicPathfinder.GeneDirection;
 
 namespace DynamicPathfinder
@@ -42,6 +43,12 @@ namespace DynamicPathfinder
 
             newPosition.MoveDirection(direction);
             Path.Add(newPosition);
+
+            if (CurrentPosition.GetDistance(newPosition) > 1)
+            {
+                Console.WriteLine("dafuq?");
+            }
+
             CurrentPosition = newPosition;
         }
 
