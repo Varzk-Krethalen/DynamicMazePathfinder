@@ -27,8 +27,7 @@ namespace ConsoleTestingApp
             {
                 RunAlgorithm();
             }
-            Console.WriteLine($"Final Generation = {geneticAlgorithm.Generation - 1}");
-            Console.ReadKey();
+            Console.ReadLine();
         }
 
         private static Coordinate GetDestFromUser()
@@ -72,7 +71,7 @@ namespace ConsoleTestingApp
         {
             Genome bestGenome = geneticAlgorithm.GetFittestGenome();
             Coordinate dest = geneticAlgorithm.DestinationPosition;
-            string pathStr = "";
+            string pathStr = $"Gen {geneticAlgorithm.Generation + 1}, ";
             if (lastCoordOnly)
             {
                 Coordinate lastCoord = bestGenome.Path.Last();
